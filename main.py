@@ -12,7 +12,7 @@ UDP_PORT = 5000
 STORAGE = "storage/data.json"
 
 
-class main:
+class Main:
     udp_port = UDP_PORT
     def __init__(
         self,
@@ -20,7 +20,7 @@ class main:
         udp_port: int = UDP_PORT,
         storage: str = STORAGE
     ):
-        main.udp_port = udp_port
+        Main.udp_port = udp_port
         self.setup_http(http_port)
         self.setup_udp(storage)
 
@@ -31,7 +31,7 @@ class main:
         self.killerthread = Thread(target=self.http_server.shutdown)
 
     def setup_udp(self, storage: str):
-        self.udp_server = socket.gethostname(), main.udp_port
+        self.udp_server = socket.gethostname(), Main.udp_port
         self.storage = pathlib.Path().joinpath(storage)
         if not self.storage.is_file():
             self.storage.parent.mkdir(parents=True, exist_ok=True)
@@ -99,7 +99,7 @@ class HttpHandler(BaseHTTPRequestHandler):
 
     def send_udp(self, data):
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-            server = socket.gethostname(), main.udp_port
+            server = socket.gethostname(), Main.udp_port
             sock.sendto(data, server)
 
     def send_static(self):
@@ -115,5 +115,5 @@ class HttpHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    m = main()
+    m = Main()
     m.loop()
